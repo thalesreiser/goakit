@@ -1,0 +1,45 @@
+name: Set up workspace
+description: >-
+  Installs pnpm (version from packageManager in the root package.json) and
+  Node.js (from .nvmrc), installs workspace dependencies with the frozen
+  lockfile, and optionally restores the local Turborepo cache. Run
+  actions/checkout before this action.
+inputs:
+  turbo-cache:
+    description: >-
+      Name of the Turborepo cache to restore and save (normally the job id).
+      Leave empty to skip the Turborepo cache.
+    required: false
+    default: ''
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/action-setup@v4
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version-file: .nvmrc
+        cache: pnpm
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile
+    # Local Turborepo cache (.turbo/cache), one entry per job and commit. The
+    # restore keys fall back to the newest entry for the same job, so a pull
+    # request starts from its own previous run or from main.
+    - name: Restore Turborepo cache
+      if: inputs.turbo-cache != ''
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: .turbo/cache
+        key: turbo-${{ runner.os }}-${{ inputs.turbo-cache }}-${{ github.sha }}
+        restore-keys: |
+          turbo-${{ runner.os }}-${{ inputs.turbo-cache }}-
+    # Turborepo never prunes its local cache. Dropping entries older than a
+    # week keeps the saved cache from growing on every run.
+    - name: Trim Turborepo cache
+      if: inputs.turbo-cache != ''
+      shell: bash
+      run: |
+        if [ -d .turbo/cache ]; then
+          find .turbo/cache -type f -mtime +7 -delete
+          du -sh .turbo/cache
+        fi

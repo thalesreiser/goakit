@@ -41,6 +41,10 @@ git config blame.ignoreRevsFile .git-blame-ignore-revs
 
 The [CI workflow](.github/workflows/ci.yml) runs the same checks on every pull request and is the source of truth; a pull request is ready for review only when CI is green.
 
+### Continuous integration
+
+CI runs one job per check: `Format`, `Lint`, `Typecheck`, `Test`, `Build` (`build` and `export`) and `Expo dependency check`. On a pull request, each Turborepo task runs only in the packages affected by the change and their dependents (`turbo run <task> --affected`, compared with the pull request's base commit); a change to `turbo.json`, `.nvmrc`, the root `package.json`, `pnpm-workspace.yaml` or the CI files affects every package. Pushes to `main` run every task in every package. Task results are cached between runs in the local Turborepo cache (`.turbo/cache`), restored per job. The `ci-ok` job summarises the result and fails if any other job failed or was cancelled; it is the check to require on `main`.
+
 `expo export` only proves that the JavaScript bundles build. It is not a device test. In the pull request, state exactly where the change was exercised (web preview, Android device, iOS device) and leave the others unticked.
 
 ## Language

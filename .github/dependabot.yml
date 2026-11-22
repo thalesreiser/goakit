@@ -59,7 +59,10 @@ updates:
       - dependency-name: react-native-css
 
   - package-ecosystem: github-actions
-    directory: /
+    # Workflows plus the local composite actions in .github/actions/.
+    directories:
+      - /
+      - /.github/actions/*
     target-branch: main
     schedule:
       interval: weekly
