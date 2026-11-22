@@ -35,6 +35,8 @@ Do not create empty folders, a generic API layer, abstract repositories, or infr
 
 Intended direction: navigation entry points → features → reusable components. Local rules depend on types and data without importing components, navigation, or external SDKs. Types do not depend on UI.
 
+Between workspaces, apps depend on packages and never on each other, packages never depend on apps, and `packages/domain` imports no UI, networking, SDK, or storage code. Lint enforces these boundaries; see "Package boundaries" in [AGENTS.md](../AGENTS.md).
+
 In the demonstration, simple shared state (Context + reducer, if sufficient) should keep lists and drafts consistent between screens. Components receive data and actions; they do not load mocks or access services directly. Changes are immutable. The catalog is a reference; personal edits must not modify it.
 
 Separate quiz/editing drafts from the confirmed list. Going back or canceling must not silently apply partial changes. Stable identifiers distinguish lists, categories, and items; duplicating a list requires new identities and copies of nested objects. Do not use names or array positions as identity.
