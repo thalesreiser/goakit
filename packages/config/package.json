@@ -9,8 +9,12 @@
     "prettier",
     "tsconfig"
   ],
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
   "exports": {
     "./eslint/base": "./eslint/base.js",
+    "./eslint/boundaries": "./eslint/boundaries.js",
     "./eslint/expo": "./eslint/expo.js",
     "./prettier": "./prettier/index.js",
     "./tsconfig/*": "./tsconfig/*",

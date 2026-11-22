@@ -20,6 +20,28 @@
 - Domain rules are pure functions without UI, networking, or storage, so they can move to `packages/domain` once it exists (planned).
 - Existing color tokens are in `apps/mobile/global.css`; do not duplicate their values in components. The initial Paper scale is in `apps/mobile/src/theme/patterns.ts` and `docs/implementation.md`. Prefer semantic roles and reusable variants.
 
+## Package boundaries
+
+Lint enforces which workspaces may import which (EST-01.5). The presets live in `@goakit/config/eslint/boundaries`, and a violation fails `pnpm lint` in CI with a message that names the boundary.
+
+| Workspace         | Preset               | Must not import                                                                                                                                                                                            |
+| ----------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/*`          | `boundaries.app`     | Another app, by package name (`@goakit/web`) or by relative path (`../../web/src`)                                                                                                                         |
+| `packages/*`      | `boundaries.package` | Any app                                                                                                                                                                                                    |
+| `packages/domain` | `boundaries.domain`  | Any app; UI (React, React Native, Expo, Next.js, UI kits); networking (`axios`, `ky`, sockets, `fetch` and other globals); server frameworks, SDKs and storage (`@nestjs/*`, Drizzle); Node.js I/O modules |
+
+Shared code goes in a package under `packages/`, never in an app that another app imports. When you create a workspace, add its preset after the base config in its `eslint.config.js`:
+
+```js
+const { defineConfig } = require('eslint/config');
+const base = require('@goakit/config/eslint/base');
+const boundaries = require('@goakit/config/eslint/boundaries');
+
+module.exports = defineConfig([base, boundaries.domain]);
+```
+
+When you create an app, also add its package name to `APP_PACKAGES` in `packages/config/eslint/boundaries.js`. The presets own `no-restricted-imports`; ESLint replaces a rule's options instead of merging them, so to restrict more modules in one workspace, spread the exported pattern lists into a single entry instead of configuring the rule again. The presets are covered by `packages/config/tests/boundaries.test.js`.
+
 ## Invariants
 
 - Completion is one boolean per item. Progress is personal and derived; do not implement separate purchase/prepare/pack stages.
