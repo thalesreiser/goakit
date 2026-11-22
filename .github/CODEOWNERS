@@ -1,0 +1,7 @@
+# Default owner for everything in the repository.
+* @gabrielguerguen
+
+# CI/CD, repository automation, and build configuration.
+/.github/ @gabrielguerguen @thalesreiser
+/eas.json @gabrielguerguen @thalesreiser
+/app.config.* @gabrielguerguen @thalesreiser

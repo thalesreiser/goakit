@@ -1,0 +1,32 @@
+name: Feature request
+description: Propose a change to the product or the project.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Product decisions are Gabriel's. Check docs/product.md and docs/decisions.md first; many topics are already recorded as open questions (Q01–Q15).
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What situation at a festival or while packing does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true
+  - type: input
+    id: decisions
+    attributes:
+      label: Related decisions
+      description: IDs from docs/decisions.md, if any.
+      placeholder: Q04, D06
+  - type: textarea
+    id: privacy
+    attributes:
+      label: Privacy and sharing impact
+      description: Does this touch progress, private items, or what is shared?
