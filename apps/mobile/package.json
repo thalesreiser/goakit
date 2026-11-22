@@ -1,0 +1,49 @@
+{
+  "name": "@goakit/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "ios:device": "expo run:ios --device --configuration Release",
+    "web": "expo start --web",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "expo:check": "expo install --check",
+    "export": "expo export --platform all"
+  },
+  "dependencies": {
+    "@expo/html-elements": "^0.12.5",
+    "@gluestack-ui/core": "^5.0.15",
+    "@gluestack-ui/utils": "^5.0.6",
+    "@legendapp/motion": "^2.5.3",
+    "expo": "~57.0.33",
+    "expo-status-bar": "~57.0.1",
+    "nativewind": "5.0.0-rc.0",
+    "react": "19.2.3",
+    "react-aria": "^3.53.1",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-css": "3.1.0-rc.0",
+    "react-native-reanimated": "4.5.1",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-svg": "15.15.4",
+    "react-native-web": "^0.21.2",
+    "react-native-worklets": "0.10.1",
+    "react-stately": "^3.51.0",
+    "tailwind-variants": "^0.1.20"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/react": "~19.2.2",
+    "babel-plugin-module-resolver": "^5.0.3",
+    "babel-preset-expo": "~57.0.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

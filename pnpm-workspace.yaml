@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Same pin the npm setup had (`overrides` in package.json).
+overrides:
+  lightningcss: 1.30.1
+
+# Replaces npm's `legacy-peer-deps=true`: peer dependency conflicts are
+# reported as warnings instead of failing the install, and missing peers are
+# installed so every package can resolve them. Revisit in DEC-11.
+strictPeerDependencies: false
+autoInstallPeers: true

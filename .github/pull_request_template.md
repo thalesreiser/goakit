@@ -8,10 +8,10 @@
 
 <!-- Tick only what was actually done. Export is not a device test. -->
 
-- [ ] `npm run typecheck`
-- [ ] `npm test`
-- [ ] `npx expo install --check`
-- [ ] `npx expo export --platform all`
+- [ ] `pnpm turbo run typecheck`
+- [ ] `pnpm turbo run test`
+- [ ] `pnpm turbo run expo:check` (`expo install --check`)
+- [ ] `pnpm turbo run export` (`expo export --platform all`)
 - [ ] Web preview
 - [ ] Android device (model / OS version):
 - [ ] iOS device (model / OS version):
