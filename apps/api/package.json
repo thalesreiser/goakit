@@ -1,0 +1,38 @@
+{
+  "name": "@goakit/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Goakit REST API (NestJS with the Fastify adapter).",
+  "license": "MIT",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node --env-file-if-exists=.env dist/main.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "format:check": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.2.11",
+    "@nestjs/core": "11.2.11",
+    "@nestjs/platform-fastify": "11.2.11",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@goakit/config": "workspace:*",
+    "@swc/core": "1.16.22",
+    "@types/node": "22.20.5",
+    "eslint": "^9.39.5",
+    "prettier": "^3.10.1",
+    "typescript": "~6.0.3",
+    "unplugin-swc": "2.0.0",
+    "vitest": "5.1.1"
+  }
+}

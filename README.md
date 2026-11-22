@@ -6,7 +6,7 @@ A music festival checklist app for Android and iOS, initially focused on psytran
 
 The first UI block was implemented from Paper: My lists, empty states, checklist, adding/editing/removing items, and progress. See [testing instructions and delivery limits](docs/implementation.md).
 
-The interface uses mock data and in-memory state. The quiz, list reuse, privacy, and sharing are upcoming blocks and are not yet available. There is no backend, persistence, or live integration; Bruno will handle infrastructure later.
+The interface uses mock data and in-memory state. The quiz, list reuse, privacy, and sharing are upcoming blocks and are not yet available. The app has no backend connection, persistence, or live integration yet. The API in `apps/api` is a skeleton with configuration validation and a health check only; Bruno will handle infrastructure later.
 
 ## Project foundations
 
@@ -39,7 +39,7 @@ pnpm --filter @goakit/mobile run web
 
 ## Structure
 
-The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.yaml`, `turbo.json`). The Expo app is the only app so far; `packages/config` holds the shared tooling configuration.
+The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.yaml`, `turbo.json`). The apps so far are the Expo app and the API skeleton; `packages/config` holds the shared tooling configuration.
 
 - `apps/mobile/`: the Expo app (`@goakit/mobile`).
   - `App.tsx`: providers and application entry point.
@@ -51,6 +51,11 @@ The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.ya
   - `src/components/`: reusable application components.
   - `src/mocks/` and `src/theme/`: mock data and visual patterns from Paper.
   - `tests/`: Node test runner tests for the local rules.
+- `apps/api/`: the REST API skeleton (`@goakit/api`), see [API](#api).
+  - `src/main.ts`: process entry point; `src/app.ts`: builds the Nest application on Fastify.
+  - `src/config/`: environment validation (Zod) and the injectable configuration.
+  - `src/health/`: the `GET /health` route.
+  - `test/`: Vitest unit and end-to-end tests.
 - `packages/config/`: shared tooling configuration (`@goakit/config`): TypeScript (`tsconfig/strict.json`, `tsconfig/base.json`), ESLint flat configs (`eslint/base` for TypeScript packages, `eslint/expo` for Expo apps, built on `eslint-config-expo`), and Prettier (`prettier`).
 - `docs/`: foundations, implementation, and planning.
 - `.github/workflows/ci.yml`: automated format, type, test, lint, dependency, and bundle checks.
@@ -70,6 +75,22 @@ pnpm turbo run export
 `expo:check` runs `expo install --check` and `export` runs `expo export --platform all`, both in `apps/mobile`. Export checks JavaScript bundles; it does not produce store binaries or replace device testing.
 
 To build and install on your iPhone from a Mac with a free Apple account, see [local iOS testing](docs/ios-local-testing.md). The initial iOS identifier is `com.gabrielguerguen.goakit`. The `pnpm --filter @goakit/mobile run ios:device` command uses the Release configuration, with the interface code bundled into the application; Xcode, CocoaPods, signing, and the device must be ready.
+
+## API
+
+`apps/api` (`@goakit/api`) is the backend skeleton: NestJS 11 with the Fastify adapter ([ADR 0002](docs/decisions/0002-backend-typescript-nestjs.md)). It has no business routes, database, or authentication yet.
+
+- Business routes will live under the `/v1` prefix. `GET /health` stays outside it, unversioned, and returns `200` with `{ "status": "ok", "uptime": <seconds> }`.
+- The environment is validated with Zod at startup. If a required variable is missing or a value is invalid, the process exits with code 1 and lists every problem.
+
+| Variable    | Required | Default   | Values                                                       |
+| ----------- | -------- | --------- | ------------------------------------------------------------ |
+| `NODE_ENV`  | yes      |           | `development`, `test`, `production`                          |
+| `PORT`      | yes      |           | integer from 1 to 65535                                      |
+| `HOST`      | no       | `0.0.0.0` | interface to bind                                            |
+| `LOG_LEVEL` | no       | `info`    | `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent` |
+
+Copy `apps/api/.env.example` to `apps/api/.env` for local runs; `start` loads it when present. Scripts (`pnpm --filter @goakit/api run <script>`): `build` (compiles to `dist/`), `start` (runs `dist/main.js`), `typecheck`, `lint`, `test` (Vitest), `format`, `format:check`.
 
 ## Adding components
 
