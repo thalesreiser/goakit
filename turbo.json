@@ -1,0 +1,20 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "tasks": {
+    "typecheck": {
+      "outputs": []
+    },
+    "test": {
+      "outputs": []
+    },
+    "expo:check": {
+      "cache": false,
+      "passThroughEnv": ["CI", "EXPO_*"]
+    },
+    "export": {
+      "env": ["EXPO_PUBLIC_*"],
+      "passThroughEnv": ["CI", "EXPO_*"],
+      "outputs": ["dist/**"]
+    }
+  }
+}

@@ -21,6 +21,9 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
+# Turborepo
+.turbo/
+
 # debug
 npm-debug.*
 yarn-debug.*
@@ -37,8 +40,8 @@ yarn-error.*
 *.tsbuildinfo
 
 # generated native folders
-/ios
-/android
+apps/*/ios/
+apps/*/android/
 
 # secrets
 .env
