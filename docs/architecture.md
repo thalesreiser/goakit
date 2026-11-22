@@ -1,5 +1,7 @@
 # Organization and technical boundaries
 
+> **Fork note (2026-11-22):** parts of this document describe the upstream prototype's scope and roles. Where it contradicts the accepted [architecture decision records](decisions/README.md), the ADRs apply.
+
 ## Existing foundation
 
 The repository contains Expo SDK 57, React Native, strict TypeScript, Gluestack UI v5, and NativeWind v5 preview. `package.json` declares dependencies; `package-lock.json` records resolved versions. The installer presents Gluestack as alpha. The foundation passed type checks, Expo compatibility checks, and bundle generation during setup; this does not amount to testing product flows on devices.

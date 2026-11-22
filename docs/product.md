@@ -1,5 +1,7 @@
 # Goakit foundations
 
+> **Fork note (2026-11-22):** parts of this document describe the upstream prototype's scope and roles. Where it contradicts the accepted [architecture decision records](decisions/README.md), the ADRs apply.
+
 ## Source and scope
 
 Main reference: [Festival checklist app brief](https://docs.google.com/document/d/1bDFO0IcOABNzh1txCChQS_F3TNGzH141BjY0kG8kkes/edit), by Gabriel Guerguen, consulted on October 10, 2026. The brief guides the product; Gabriel's instructions in this conversation define the current delivery. This document is a working synthesis, not a copy or replacement of the brief. Future changes to the source require reviewing this synthesis.
