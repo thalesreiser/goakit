@@ -25,9 +25,12 @@ Run the checks listed in the [README](README.md#verification):
 
 ```sh
 pnpm turbo run typecheck test
+pnpm lint
 pnpm turbo run expo:check
 pnpm turbo run export
 ```
+
+Format changed files with `pnpm format` (Prettier, shared config from `packages/config`); `pnpm format:check` reports unformatted files without writing. Formatting is not enforced in CI yet: the existing code is reformatted in a separate task (EST-01.4).
 
 The [CI workflow](.github/workflows/ci.yml) runs the same checks on every pull request and is the source of truth; a pull request is ready for review only when CI is green.
 

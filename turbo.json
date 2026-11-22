@@ -7,6 +7,15 @@
     "test": {
       "outputs": []
     },
+    "lint": {
+      "outputs": []
+    },
+    "format": {
+      "cache": false
+    },
+    "format:check": {
+      "outputs": []
+    },
     "expo:check": {
       "cache": false,
       "passThroughEnv": ["CI", "EXPO_*"]

@@ -10,6 +10,9 @@
     "ios:device": "expo run:ios --device --configuration Release",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
+    "format:check": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "expo:check": "expo install --check",
     "export": "expo export --platform all"
@@ -36,10 +39,13 @@
     "tailwind-variants": "^0.1.20"
   },
   "devDependencies": {
+    "@goakit/config": "workspace:*",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/react": "~19.2.2",
     "babel-plugin-module-resolver": "^5.0.3",
     "babel-preset-expo": "~57.0.0",
+    "eslint": "^9.39.5",
+    "prettier": "^3.10.1",
     "tailwindcss": "^4.3.3",
     "typescript": "~6.0.3"
   },
