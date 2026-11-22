@@ -19,7 +19,7 @@ Quiz, reuse, and sharing are unavailable with an explanation of the next block. 
 
 ## Organization
 
-`src/features/checklists/` separates state/navigation, screens, and the reducer. `src/components/checklist/` contains reusable items and sections. `src/components/shared/` contains buttons, headings, notes, and dialogs. `src/mocks/` creates fresh fixtures on each reset; it is not the final catalog. `src/theme/patterns.ts` collects the scale extracted from Paper, using semantic colors from `global.css` and NativeWind.
+Paths in this section are relative to `apps/mobile/`. `src/features/checklists/` separates state/navigation, screens, and the reducer. `src/components/checklist/` contains reusable items and sections. `src/components/shared/` contains buttons, headings, notes, and dialogs. `src/mocks/` creates fresh fixtures on each reset; it is not the final catalog. `src/theme/patterns.ts` collects the scale extracted from Paper, using semantic colors from `global.css` and NativeWind.
 
 Initial scale: title 28/36, card title 20/28, section 18/26, body 16/24, and caption/label 14/22. Horizontal padding 24, main gap 16, control radius 8, minimum button height 48. Smaller interaction targets in the wireframes were enlarged to at least 44; no status bar is drawn because the system supplies the real one.
 
@@ -33,9 +33,9 @@ Everything stays in memory. Reloading restores the examples. There are no accoun
 
 ## Validation
 
-- `npm run typecheck`: screen, prop, and model types.
-- `npm test`: binary progress, isolation between lists, editing by ID with duplicate names, rejection of invalid input, the last item, and independent resets.
-- `npx expo install --check` and export for Android, iOS, and web.
+- `pnpm turbo run typecheck`: screen, prop, and model types.
+- `pnpm turbo run test`: binary progress, isolation between lists, editing by ID with duplicate names, rejection of invalid input, the last item, and independent resets.
+- `pnpm turbo run expo:check` (`expo install --check`) and `pnpm turbo run export` for Android, iOS, and web.
 - Interactive web preview review: opening, progress, filters, editing name/quantity/category, canceling without applying, required names, adding/removing the last item, no-lists state, and reset on reload.
 
 Do not claim Android/iOS device tests: they were not performed for this delivery. The web preview supports UI review without expanding scope to a complete web product. Native screen reader accessibility, physical keyboards, and mobile virtual keyboards still require device validation.

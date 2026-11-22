@@ -43,7 +43,7 @@ Each delivery must support the flows it announces, without buttons that appear c
 
 ## Proportionate technical checks
 
-Documentation: review consistency and internal links. Types: `npm run typecheck`. Component, styling, or navigation changes: check dependencies and export bundles, in addition to testing states on available devices.
+Documentation: review consistency and internal links. Types: `pnpm turbo run typecheck`. Component, styling, or navigation changes: check dependencies and export bundles, in addition to testing states on available devices.
 
 When rules are implemented, create behavior tests for relevant boundaries: public filtering without private fields/progress, copies without shared references, adaptations applied once, and empty-list progress. Do not create tests that merely reproduce types or static document content.
 
