@@ -1,7 +1,7 @@
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css";
-@import "nativewind/theme";
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import 'tailwindcss/utilities.css';
+@import 'nativewind/theme';
 
 /* Paper reference: light neutral theme. Dark mode awaits a design. */
 @layer theme {
@@ -24,7 +24,6 @@
     --accent: 247 247 247;
     --accent-foreground: 52 52 52;
   }
-
 }
 
 @theme inline {

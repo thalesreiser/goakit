@@ -29,28 +29,28 @@ The initial audience includes Gabriel, his friends, newcomers, and experienced f
 
 ## Vocabulary
 
-| Concept | Meaning |
-| --- | --- |
-| Trip context | Duration, user-provided weather, accommodation, transport, and thermal sensitivity |
-| Catalog | Mock reference used to generate suggestions; not the personal list |
-| Personal checklist | Categories, items, quantities, completion, and privacy choices |
-| Adaptation | A proposal to add, remove, or adjust a quantity, with a reason and decision |
-| Shareable content | A projection containing only visible names and quantities, organized by category |
-| Publication | A shareable version used to demonstrate what a recipient would see |
-| Copy | A new list with its own identity and no update relationship with its source |
+| Concept            | Meaning                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| Trip context       | Duration, user-provided weather, accommodation, transport, and thermal sensitivity |
+| Catalog            | Mock reference used to generate suggestions; not the personal list                 |
+| Personal checklist | Categories, items, quantities, completion, and privacy choices                     |
+| Adaptation         | A proposal to add, remove, or adjust a quantity, with a reason and decision        |
+| Shareable content  | A projection containing only visible names and quantities, organized by category   |
+| Publication        | A shareable version used to demonstrate what a recipient would see                 |
+| Copy               | A new list with its own identity and no update relationship with its source        |
 
 ## Flows to implement after design
 
-| Flow | Expected demonstration outcome |
-| --- | --- |
-| My lists | Browse examples or a deliberately selectable empty state |
-| Quiz → suggestion | Provide context; generate a list using simple local rules; review before use |
-| Preparation | Add, edit, delete, change quantities, and complete items; progress follows changes |
-| Reuse | Provide new context, review proposals, and create an independent list |
-| Privacy → preview | Configure categories and item exceptions; inspect exposed items and quantities |
-| Share | Switch between link, JPG image, and text previews with simulated feedback |
-| Publish link | Navigate mock identification/registration and publication states |
-| Receive → copy | Browse shared content and choose direct copying or an adaptation quiz |
+| Flow              | Expected demonstration outcome                                                     |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| My lists          | Browse examples or a deliberately selectable empty state                           |
+| Quiz → suggestion | Provide context; generate a list using simple local rules; review before use       |
+| Preparation       | Add, edit, delete, change quantities, and complete items; progress follows changes |
+| Reuse             | Provide new context, review proposals, and create an independent list              |
+| Privacy → preview | Configure categories and item exceptions; inspect exposed items and quantities     |
+| Share             | Switch between link, JPG image, and text previews with simulated feedback          |
+| Publish link      | Navigate mock identification/registration and publication states                   |
+| Receive → copy    | Browse shared content and choose direct copying or an adaptation quiz              |
 
 The final product anticipates viewing links in a browser and installing the app to copy and check off items. In this phase, represent the recipient experience inside the prototype; do not build a complete web application or actual store redirects.
 

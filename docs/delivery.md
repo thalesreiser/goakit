@@ -19,25 +19,25 @@ Each delivery must support the flows it announces, without buttons that appear c
 
 ## Acceptance scenarios for the future prototype
 
-| Scenario | Expected evidence |
-| --- | --- |
-| No lists | Empty state allows starting the quiz; examples can be restored without restarting the app |
-| Quiz | Moving forward/back preserves the draft; context is understandable; generation does not require networking |
-| Edit list | Valid names and quantities are applied; canceling preserves the original; errors do not corrupt state |
-| Complete | Checking/unchecking updates the counter; quantities greater than 1 remain binary |
-| Remove last item | List becomes empty without errors or an invalid percentage |
-| Reuse | Original preserved; suggestions have reasons; only accepted ones affect the new list |
-| Reject proposal | Content does not change; navigating between screens preserves the decision during the session |
-| Apply again | An accepted proposal does not duplicate an item or apply an adjustment twice |
-| Custom item | Preserved according to the agreed policy; adaptation does not silently remove it |
-| Categories and exceptions | Exercise visible/hidden categories × inherited/visible/hidden items according to Q01/Q02 |
-| Link, JPG, and text previews | Same allowed items and quantities; no progress or private content |
-| Publish link | Mock identification is labeled; never requests a real password or generates a public URL |
-| Offline/failure | Local editing preserved; pending status visible; latest simulated publication remains; retry does not lose data |
-| Make private after publication | Current preview hides the item; previous publication remains until simulated update; explain the difference |
-| Browse and copy | Recipient accesses only the public projection; can copy directly or take the quiz |
-| Edit copy | Changes do not affect the original and vice versa; does not inherit the author's personal progress |
-| Restart | Data may return to the initial scenario; in-memory limitation is explicit during testing |
+| Scenario                       | Expected evidence                                                                                               |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| No lists                       | Empty state allows starting the quiz; examples can be restored without restarting the app                       |
+| Quiz                           | Moving forward/back preserves the draft; context is understandable; generation does not require networking      |
+| Edit list                      | Valid names and quantities are applied; canceling preserves the original; errors do not corrupt state           |
+| Complete                       | Checking/unchecking updates the counter; quantities greater than 1 remain binary                                |
+| Remove last item               | List becomes empty without errors or an invalid percentage                                                      |
+| Reuse                          | Original preserved; suggestions have reasons; only accepted ones affect the new list                            |
+| Reject proposal                | Content does not change; navigating between screens preserves the decision during the session                   |
+| Apply again                    | An accepted proposal does not duplicate an item or apply an adjustment twice                                    |
+| Custom item                    | Preserved according to the agreed policy; adaptation does not silently remove it                                |
+| Categories and exceptions      | Exercise visible/hidden categories × inherited/visible/hidden items according to Q01/Q02                        |
+| Link, JPG, and text previews   | Same allowed items and quantities; no progress or private content                                               |
+| Publish link                   | Mock identification is labeled; never requests a real password or generates a public URL                        |
+| Offline/failure                | Local editing preserved; pending status visible; latest simulated publication remains; retry does not lose data |
+| Make private after publication | Current preview hides the item; previous publication remains until simulated update; explain the difference     |
+| Browse and copy                | Recipient accesses only the public projection; can copy directly or take the quiz                               |
+| Edit copy                      | Changes do not affect the original and vice versa; does not inherit the author's personal progress              |
+| Restart                        | Data may return to the initial scenario; in-memory limitation is explicit during testing                        |
 
 “JPG,” “link,” and “text” in this phase describe options/previews and feedback; file export, clipboard, share sheets, and public addresses are not implicitly included. Decide separately whether any local native capability is needed for testing.
 
