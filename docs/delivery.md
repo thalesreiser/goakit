@@ -1,5 +1,7 @@
 # Implementation and validation plan
 
+> **Fork note (2026-11-22):** parts of this document describe the upstream prototype's scope and roles. Where it contradicts the accepted [architecture decision records](decisions/README.md), the ADRs apply.
+
 ## Current delivery
 
 Foundations completed and the first UI block implemented: lists, checklist, and in-memory item editing. See [implementation, validation, and limits](implementation.md). Generation, adaptation, privacy filtering, authentication, and publication remain planned.

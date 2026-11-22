@@ -2,6 +2,8 @@
 
 Status as of October 10, 2026. “Proposed” does not mean approved. Record changes here with their reason and impact, preserving the reference to the brief.
 
+Architecture decision records (ADRs) for this fork live in [`docs/decisions/`](decisions/README.md). This file keeps the earlier decision log and the open questions.
+
 ## Confirmed for this phase
 
 | ID | Decision | Consequence |

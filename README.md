@@ -13,8 +13,9 @@ The interface uses mock data and in-memory state. The quiz, list reuse, privacy,
 - [Product and current scope](docs/product.md)
 - [Organization, types, and technical boundaries](docs/architecture.md)
 - [Confirmed decisions, proposals, and open questions](docs/decisions.md)
+- [Architecture decision records (ADRs)](docs/decisions/README.md)
 - [Delivery sequence, acceptance scenarios, and handoff to Bruno](docs/delivery.md)
-- [AI development instructions](AGENTS.md)
+- [Development and agent instructions](AGENTS.md)
 
 The [main brief](https://docs.google.com/document/d/1bDFO0IcOABNzh1txCChQS_F3TNGzH141BjY0kG8kkes/edit) guides the product. Local documentation distinguishes the final product from the current prototype.
 
