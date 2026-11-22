@@ -5,10 +5,16 @@
   "scripts": {
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
+    "lint": "turbo run lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "expo:check": "turbo run expo:check",
     "export": "turbo run export"
   },
+  "prettier": "@goakit/config/prettier",
   "devDependencies": {
+    "@goakit/config": "workspace:*",
+    "prettier": "^3.10.1",
     "turbo": "^2.11.11"
   },
   "engines": {

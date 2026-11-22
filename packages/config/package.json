@@ -1,0 +1,43 @@
+{
+  "name": "@goakit/config",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Shared TypeScript, ESLint and Prettier configuration for Goakit apps and packages.",
+  "license": "MIT",
+  "files": [
+    "eslint",
+    "prettier",
+    "tsconfig"
+  ],
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/expo": "./eslint/expo.js",
+    "./prettier": "./prettier/index.js",
+    "./tsconfig/*": "./tsconfig/*",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "typescript-eslint": "^8.73.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "prettier": "^3.10.1",
+    "typescript": "~6.0.3"
+  },
+  "peerDependencies": {
+    "eslint": "^9.39.5",
+    "prettier": "^3.10.1",
+    "typescript": ">=5.8 <6.1"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

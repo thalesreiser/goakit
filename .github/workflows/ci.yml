@@ -18,5 +18,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm turbo run typecheck test
+      - run: pnpm turbo run lint
       - run: pnpm turbo run expo:check
       - run: pnpm turbo run export

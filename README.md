@@ -39,7 +39,7 @@ pnpm --filter @goakit/mobile run web
 
 ## Structure
 
-The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.yaml`, `turbo.json`). The Expo app is the only workspace package so far.
+The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.yaml`, `turbo.json`). The Expo app is the only app so far; `packages/config` holds the shared tooling configuration.
 
 - `apps/mobile/`: the Expo app (`@goakit/mobile`).
   - `App.tsx`: providers and application entry point.
@@ -51,16 +51,20 @@ The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.ya
   - `src/components/`: reusable application components.
   - `src/mocks/` and `src/theme/`: mock data and visual patterns from Paper.
   - `tests/`: Node test runner tests for the local rules.
+- `packages/config/`: shared tooling configuration (`@goakit/config`): TypeScript (`tsconfig/strict.json`, `tsconfig/base.json`), ESLint flat configs (`eslint/base` for TypeScript packages, `eslint/expo` for Expo apps, built on `eslint-config-expo`), and Prettier (`prettier`).
 - `docs/`: foundations, implementation, and planning.
-- `.github/workflows/ci.yml`: automated type, test, dependency, and bundle checks.
+- `.github/workflows/ci.yml`: automated type, test, lint, dependency, and bundle checks.
 
 ## Verification
 
 ```sh
 pnpm turbo run typecheck test
+pnpm lint
 pnpm turbo run expo:check
 pnpm turbo run export
 ```
+
+`lint` runs ESLint in every workspace through Turborepo. Format with Prettier using `pnpm format` (writes) or `pnpm format:check` (reports only); both run at the repository root, over the whole repository, and honor `.prettierignore`. CI does not check formatting yet (EST-01.4 reformats the existing code first).
 
 `expo:check` runs `expo install --check` and `export` runs `expo export --platform all`, both in `apps/mobile`. Export checks JavaScript bundles; it does not produce store binaries or replace device testing.
 
