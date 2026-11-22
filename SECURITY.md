@@ -16,3 +16,7 @@ Goakit is currently a prototype with mock data and in-memory state: there is no 
 - Mock data must not contain real credentials or personal data.
 - Variables prefixed with `EXPO_PUBLIC_` are embedded in the app bundle and are public by design. Never put a secret in one.
 - If a secret is committed by mistake, treat it as leaked: revoke or rotate it first, then remove it from the repository.
+
+## Automated checks
+
+The [security workflow](.github/workflows/security.yml) runs on every pull request to `main` and every push to `main`: Gitleaks scans the full git history for secrets, and dependency review fails a pull request that adds a dependency with a known vulnerability of high or critical severity.
