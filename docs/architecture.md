@@ -16,18 +16,18 @@ During implementation, NativeWind, already resolved as `5.0.0-rc.0`, was pinned 
 
 Locations are relative to `apps/mobile/`.
 
-| Location | Responsibility | Status |
-| --- | --- | --- |
-| `App.tsx` | Current entry point | Existing; do not expand it to contain entire flows |
-| `components/ui/` | Installed Gluestack components | Keep the current path to avoid a migration without benefit |
-| `global.css` | Color tokens and NativeWind configuration | Existing; values are not an approved visual identity |
-| `src/types/` | Preliminary domain and demonstration types | Added with the foundations |
-| `src/features/` | Screens, state, and presentation logic by feature | First flow in `checklists/` |
-| `src/components/checklist/` | Reusable feature components | Checklist item and section |
-| `src/mocks/` | Catalog, scenarios, and simulated operations | Fresh fixtures on each reset |
-| `src/theme/` | Shared scales and conventions beyond colors | `patterns.ts` documents the Paper scale |
-| `app/` | Thin routes and layouts | Create only if Expo Router is adopted |
-| `docs/` | Product, decisions, architecture, and validation plan | Continuity documentation |
+| Location                    | Responsibility                                        | Status                                                     |
+| --------------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| `App.tsx`                   | Current entry point                                   | Existing; do not expand it to contain entire flows         |
+| `components/ui/`            | Installed Gluestack components                        | Keep the current path to avoid a migration without benefit |
+| `global.css`                | Color tokens and NativeWind configuration             | Existing; values are not an approved visual identity       |
+| `src/types/`                | Preliminary domain and demonstration types            | Added with the foundations                                 |
+| `src/features/`             | Screens, state, and presentation logic by feature     | First flow in `checklists/`                                |
+| `src/components/checklist/` | Reusable feature components                           | Checklist item and section                                 |
+| `src/mocks/`                | Catalog, scenarios, and simulated operations          | Fresh fixtures on each reset                               |
+| `src/theme/`                | Shared scales and conventions beyond colors           | `patterns.ts` documents the Paper scale                    |
+| `app/`                      | Thin routes and layouts                               | Create only if Expo Router is adopted                      |
+| `docs/`                     | Product, decisions, architecture, and validation plan | Continuity documentation                                   |
 
 Do not create empty folders, a generic API layer, abstract repositories, or infrastructure configuration in advance. If a feature needs local rules, keep them in pure functions near the feature; extract them only when there is actual reuse.
 

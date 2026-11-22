@@ -13,10 +13,10 @@ Decisions are made by Thales Reiser, the owner of this fork (see [ADR 0001](0001
 
 ## Statuses
 
-| Status | Meaning |
-| --- | --- |
-| Proposed | Written for discussion and not yet approved. Do not build on it as if it were settled. |
-| Accepted | Approved by Thales. Work must follow it until it is superseded. |
+| Status     | Meaning                                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------------------------ |
+| Proposed   | Written for discussion and not yet approved. Do not build on it as if it were settled.                       |
+| Accepted   | Approved by Thales. Work must follow it until it is superseded.                                              |
 | Superseded | Replaced by a later record. Keep the file, set the status to `Superseded by NNNN`, and link the replacement. |
 
 Accepted records are not rewritten to change their meaning. To change a decision, write a new record that supersedes the old one. Fixing typos or broken links is fine.
@@ -27,9 +27,9 @@ Open product questions (Q01–Q15) and the earlier decision log stay in [`docs/d
 
 ## Index
 
-| ADR | Title | Status |
-| --- | --- | --- |
-| [0001](0001-fork-as-independent-product.md) | Fork as an independent product (DEC-00) | Accepted |
-| [0002](0002-backend-typescript-nestjs.md) | Backend in TypeScript with NestJS (DEC-01) | Accepted |
-| [0003](0003-web-app-nextjs.md) | Web app with Next.js (DEC-04) | Accepted |
-| [0004](0004-roles-single-owner.md) | Single owner for all tracks (DEC-12) | Accepted |
+| ADR                                         | Title                                      | Status   |
+| ------------------------------------------- | ------------------------------------------ | -------- |
+| [0001](0001-fork-as-independent-product.md) | Fork as an independent product (DEC-00)    | Accepted |
+| [0002](0002-backend-typescript-nestjs.md)   | Backend in TypeScript with NestJS (DEC-01) | Accepted |
+| [0003](0003-web-app-nextjs.md)              | Web app with Next.js (DEC-04)              | Accepted |
+| [0004](0004-roles-single-owner.md)          | Single owner for all tracks (DEC-12)       | Accepted |

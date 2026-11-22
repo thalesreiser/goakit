@@ -6,16 +6,16 @@ Architecture decision records (ADRs) for this fork live in [`docs/decisions/`](d
 
 ## Confirmed for this phase
 
-| ID | Decision | Consequence |
-| --- | --- | --- |
-| D01 | Wait for Paper screens before implementing UI | Material received; implementation started with screens 01, 02, 07, 08, and 09 |
-| D02 | Future prototype with mock data and local in-memory state | No backend, persistence, or real services |
-| D03 | Binary, personal progress | No purchase/prepare/pack stages or collaboration |
-| D04 | Independent copies | Changes in either direction do not propagate between lists |
-| D05 | Adaptations require approval | Explained proposals that can be accepted or rejected |
-| D06 | Share items and quantities while respecting privacy | Progress excluded from links, text, and images |
-| D07 | Account-free use; identification when publishing a link | Identification is simulated in the prototype |
-| D08 | Gabriel leads design; Bruno will implement infrastructure | Types and boundaries documented; services not implemented in advance |
+| ID  | Decision                                                  | Consequence                                                                   |
+| --- | --------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| D01 | Wait for Paper screens before implementing UI             | Material received; implementation started with screens 01, 02, 07, 08, and 09 |
+| D02 | Future prototype with mock data and local in-memory state | No backend, persistence, or real services                                     |
+| D03 | Binary, personal progress                                 | No purchase/prepare/pack stages or collaboration                              |
+| D04 | Independent copies                                        | Changes in either direction do not propagate between lists                    |
+| D05 | Adaptations require approval                              | Explained proposals that can be accepted or rejected                          |
+| D06 | Share items and quantities while respecting privacy       | Progress excluded from links, text, and images                                |
+| D07 | Account-free use; identification when publishing a link   | Identification is simulated in the prototype                                  |
+| D08 | Gabriel leads design; Bruno will implement infrastructure | Types and boundaries documented; services not implemented in advance          |
 
 ## Technical direction
 
@@ -23,23 +23,23 @@ Keep the existing Expo + TypeScript + Gluestack + NativeWind setup without a sec
 
 ## Open questions
 
-| ID | Topic | Proposal for discussion | Suggested timing / owner |
-| --- | --- | --- | --- |
-| Q01 | Default visibility | Privacy should be a clear choice; do not infer it from category names | Before privacy and sharing; Gabriel |
-| Q02 | Item exceptions | `inherit` follows the category; `visible`/`hidden` override it. Show the decision's origin | Before implementing the public projection; Gabriel |
-| Q03 | Quiz fields | Define days/nights, values, required answers, unknown answers, and returning without losing answers | Quiz design; Gabriel |
-| Q04 | Quantities | Start with positive integers; confirm fractions/units and duration rules | Before editing and generation; Gabriel |
-| Q05 | Reuse | Reset completion for the new trip; preserve custom items and their privacy | Before duplication; Gabriel |
-| Q06 | Rejected suggestions | In the first simulation, decisions belong to the current review. Memory across trips requires a separate decision | Before adaptation; Gabriel |
-| Q07 | Custom items | Avoid automatic removal/adjustment; proposals should identify the item and explain the reason | Before the local rule engine; Gabriel |
-| Q08 | Identification for text/JPG | Do not extend the link account requirement without confirmation | Sharing design; Gabriel |
-| Q09 | Link updates | Demonstrate published versions and pending changes; do not choose automatic vs. manual for the real product | Prototype with Gabriel; infrastructure with Bruno |
-| Q10 | Persistence for testing | Stay in memory; add storage only for an explicit testing need | Before longitudinal testing; Gabriel and Bruno |
-| Q11 | Expo Router | Evaluate after mapping flows; thin routes with screens in features | Before navigation; Gabriel/development |
-| Q12 | Prerelease versions | Review risks and compatibility of the current foundation before developing screens | Before UI; development/Bruno |
-| Q13 | Festival and dates | Define the role of names, dates, and identification; do not require a real festival registry | Quiz and list design; Gabriel |
-| Q14 | Essential/optional | Do not create a required classification before validating its usefulness | Content and design; Gabriel |
-| Q15 | Undo and cancellation | Define deletion, going back during the quiz, and leaving reviews with pending proposals | State design; Gabriel |
+| ID  | Topic                       | Proposal for discussion                                                                                           | Suggested timing / owner                           |
+| --- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Q01 | Default visibility          | Privacy should be a clear choice; do not infer it from category names                                             | Before privacy and sharing; Gabriel                |
+| Q02 | Item exceptions             | `inherit` follows the category; `visible`/`hidden` override it. Show the decision's origin                        | Before implementing the public projection; Gabriel |
+| Q03 | Quiz fields                 | Define days/nights, values, required answers, unknown answers, and returning without losing answers               | Quiz design; Gabriel                               |
+| Q04 | Quantities                  | Start with positive integers; confirm fractions/units and duration rules                                          | Before editing and generation; Gabriel             |
+| Q05 | Reuse                       | Reset completion for the new trip; preserve custom items and their privacy                                        | Before duplication; Gabriel                        |
+| Q06 | Rejected suggestions        | In the first simulation, decisions belong to the current review. Memory across trips requires a separate decision | Before adaptation; Gabriel                         |
+| Q07 | Custom items                | Avoid automatic removal/adjustment; proposals should identify the item and explain the reason                     | Before the local rule engine; Gabriel              |
+| Q08 | Identification for text/JPG | Do not extend the link account requirement without confirmation                                                   | Sharing design; Gabriel                            |
+| Q09 | Link updates                | Demonstrate published versions and pending changes; do not choose automatic vs. manual for the real product       | Prototype with Gabriel; infrastructure with Bruno  |
+| Q10 | Persistence for testing     | Stay in memory; add storage only for an explicit testing need                                                     | Before longitudinal testing; Gabriel and Bruno     |
+| Q11 | Expo Router                 | Evaluate after mapping flows; thin routes with screens in features                                                | Before navigation; Gabriel/development             |
+| Q12 | Prerelease versions         | Review risks and compatibility of the current foundation before developing screens                                | Before UI; development/Bruno                       |
+| Q13 | Festival and dates          | Define the role of names, dates, and identification; do not require a real festival registry                      | Quiz and list design; Gabriel                      |
+| Q14 | Essential/optional          | Do not create a required classification before validating its usefulness                                          | Content and design; Gabriel                        |
+| Q15 | Undo and cancellation       | Define deletion, going back during the quiz, and leaving reviews with pending proposals                           | State design; Gabriel                              |
 
 ## Handling open questions
 

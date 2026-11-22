@@ -7,11 +7,7 @@ export type Visibility = 'visible' | 'hidden';
 export type ItemVisibility = Visibility | 'inherit';
 
 // These options describe demo contexts, not the final quiz wording or controls.
-export type Accommodation =
-  | 'own-camping'
-  | 'provided-camping'
-  | 'cabin'
-  | 'nearby-hotel';
+export type Accommodation = 'own-camping' | 'provided-camping' | 'cabin' | 'nearby-hotel';
 export type Transport = 'car' | 'plane' | 'group-bus';
 export type WeatherCondition = 'cold' | 'mild' | 'hot' | 'rain';
 
@@ -125,8 +121,7 @@ export interface DemoPublishedSnapshot {
 
 // Scenario state only: no real session, credentials, URL, queue or network call.
 export type DemoIdentity =
-  | { status: 'anonymous' }
-  | { status: 'identified'; simulated: true; displayName: string };
+  { status: 'anonymous' } | { status: 'identified'; simulated: true; displayName: string };
 
 export type DemoPublicationState =
   | { status: 'unpublished'; simulated: true }

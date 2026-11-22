@@ -2,9 +2,7 @@
   "extends": ["expo/tsconfig.base", "@goakit/config/tsconfig/strict.json"],
   "compilerOptions": {
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   }
 }
