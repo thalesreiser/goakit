@@ -1,0 +1,77 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    # pnpm workspace: Dependabot reads the root pnpm-lock.yaml and updates
+    # every package.json in the workspace.
+    directory: /
+    target-branch: main
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: America/Sao_Paulo
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: chore(deps)
+      prefix-development: chore(deps-dev)
+    groups:
+      dev-tooling:
+        patterns:
+          - eslint
+          - eslint-*
+          - '@eslint/*'
+          - prettier
+          - typescript
+          - '@types/*'
+          - turbo
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Expo SDK packages move together with the SDK. Upgrade them with an SDK
+      # bump and `npx expo install --fix`, not one by one.
+      - dependency-name: expo
+        update-types: [version-update:semver-major]
+      - dependency-name: expo-*
+        update-types: [version-update:semver-major]
+      - dependency-name: '@expo/*'
+        update-types: [version-update:semver-major]
+      - dependency-name: babel-preset-expo
+        update-types: [version-update:semver-major]
+      # React and React Native versions are fixed by the Expo SDK as well. A
+      # minor bump of these (for example react-native 0.86 -> 0.87, or
+      # react 19.2 -> 19.3) is effectively an SDK change, so minors are
+      # ignored too. Upgrade them with `npx expo install --fix`.
+      - dependency-name: react
+        update-types: [version-update:semver-major, version-update:semver-minor]
+      - dependency-name: react-dom
+        update-types: [version-update:semver-major, version-update:semver-minor]
+      - dependency-name: react-native
+        update-types: [version-update:semver-major, version-update:semver-minor]
+      - dependency-name: react-native-*
+        update-types: [version-update:semver-major, version-update:semver-minor]
+      # NativeWind 5 and react-native-css are a prerelease pair pinned on
+      # purpose (DEC-11). Update them only by hand, together.
+      - dependency-name: nativewind
+      - dependency-name: react-native-css
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: main
+    schedule:
+      interval: weekly
+      day: monday
+      time: '06:00'
+      timezone: America/Sao_Paulo
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+    commit-message:
+      prefix: ci(deps)
+    groups:
+      github-actions:
+        patterns:
+          - '*'
