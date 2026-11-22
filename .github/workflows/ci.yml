@@ -5,20 +5,127 @@ on:
   pull_request:
 permissions:
   contents: read
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  # Superseded pull request runs are cancelled; runs on main always finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+env:
+  TURBO_TELEMETRY_DISABLED: '1'
+  # Pull requests run each task only for the packages affected by the change
+  # (and their dependents), compared with the pull request's base commit.
+  # Pushes to main run every task in every package.
+  AFFECTED_FLAG: ${{ github.event_name == 'pull_request' && '--affected' || '' }}
+  TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha }}
 jobs:
-  check:
+  format:
+    name: Format
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      # Installs the pnpm version pinned in the root package.json (packageManager).
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          node-version-file: .nvmrc
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+          persist-credentials: false
+      - uses: ./.github/actions/setup
       - run: pnpm format:check
-      - run: pnpm turbo run typecheck test
-      - run: pnpm turbo run lint
-      - run: pnpm turbo run expo:check
-      - run: pnpm turbo run export
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # --affected compares with the pull request's base commit, so it needs
+          # the history.
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          turbo-cache: lint
+      - run: pnpm turbo run lint $AFFECTED_FLAG
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          turbo-cache: typecheck
+      - run: pnpm turbo run typecheck $AFFECTED_FLAG
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          turbo-cache: test
+      - run: pnpm turbo run test $AFFECTED_FLAG
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          turbo-cache: build
+      # `build` compiles server-side packages (dist/); `export` bundles the
+      # Expo app for every platform (`expo export`). It is not a device test.
+      - run: pnpm turbo run build export $AFFECTED_FLAG
+
+  expo-check:
+    name: Expo dependency check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      # `expo install --check` (apps/mobile only). Not cached: it compares
+      # with the versions the Expo SDK currently expects.
+      - run: pnpm turbo run expo:check $AFFECTED_FLAG
+
+  # Single gate for branch protection: fails when any job above failed or was
+  # cancelled; skipped jobs count as passing.
+  ci-ok:
+    name: ci-ok
+    if: always()
+    needs: [format, lint, typecheck, test, build, expo-check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Summarise job results
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          {
+            echo '## CI result'
+            echo
+            echo '| Job | Result |'
+            echo '| --- | --- |'
+            jq -r 'to_entries[] | "| \(.key) | \(.value.result) |"' <<< "$NEEDS"
+          } >> "$GITHUB_STEP_SUMMARY"
+          jq -r 'to_entries[] | "\(.key): \(.value.result)"' <<< "$NEEDS"
+          failed=$(jq -r '[to_entries[] | select(.value.result == "failure" or .value.result == "cancelled") | .key] | join(", ")' <<< "$NEEDS")
+          if [ -n "$failed" ]; then
+            echo "::error::Failed or cancelled: $failed"
+            exit 1
+          fi
+          echo 'All jobs passed or were skipped.'
