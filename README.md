@@ -21,56 +21,60 @@ The [main brief](https://docs.google.com/document/d/1bDFO0IcOABNzh1txCChQS_F3TNG
 
 ## Getting started
 
-Use Node.js 22 (see `.nvmrc`).
+Use Node.js 22 (see `.nvmrc`) and pnpm (the version pinned in the root `package.json` `packageManager` field; `corepack enable` installs it).
 
 ```sh
 nvm install
 nvm use
-npm ci
-npm start
+corepack enable
+pnpm install --frozen-lockfile
+pnpm --filter @goakit/mobile run start
 ```
 
 Open the QR code in an Expo Go version compatible with the installed SDK. In the terminal, press `a` for Android or `i` for the iOS simulator (macOS with Xcode). For web:
 
 ```sh
-npm run web
+pnpm --filter @goakit/mobile run web
 ```
 
 ## Structure
 
-- `App.tsx`: providers and application entry point.
-- `components/ui/`: Gluestack components that can be customized.
-- `global.css`: styles and theme tokens.
-- `assets/`: images and icons.
-- `src/types/`: preliminary types used by screens and local state.
-- `src/features/checklists/`: screens, navigation, and local rules for the first flow.
-- `src/components/`: reusable application components.
-- `src/mocks/` and `src/theme/`: mock data and visual patterns from Paper.
+The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.yaml`, `turbo.json`). The Expo app is the only workspace package so far.
+
+- `apps/mobile/`: the Expo app (`@goakit/mobile`).
+  - `App.tsx`: providers and application entry point.
+  - `components/ui/`: Gluestack components that can be customized.
+  - `global.css`: styles and theme tokens.
+  - `assets/`: images and icons.
+  - `src/types/`: preliminary types used by screens and local state.
+  - `src/features/checklists/`: screens, navigation, and local rules for the first flow.
+  - `src/components/`: reusable application components.
+  - `src/mocks/` and `src/theme/`: mock data and visual patterns from Paper.
+  - `tests/`: Node test runner tests for the local rules.
 - `docs/`: foundations, implementation, and planning.
-- `.github/workflows/ci.yml`: automated type, dependency, and bundle checks.
+- `.github/workflows/ci.yml`: automated type, test, dependency, and bundle checks.
 
 ## Verification
 
 ```sh
-npm run typecheck
-npm test
-npx expo install --check
-npx expo export --platform all
+pnpm turbo run typecheck test
+pnpm turbo run expo:check
+pnpm turbo run export
 ```
 
-Export checks JavaScript bundles; it does not produce store binaries or replace device testing.
+`expo:check` runs `expo install --check` and `export` runs `expo export --platform all`, both in `apps/mobile`. Export checks JavaScript bundles; it does not produce store binaries or replace device testing.
 
-To build and install on your iPhone from a Mac with a free Apple account, see [local iOS testing](docs/ios-local-testing.md). The initial iOS identifier is `com.gabrielguerguen.goakit`. The `npm run ios:device` command uses the Release configuration, with the interface code bundled into the application; Xcode, CocoaPods, signing, and the device must be ready.
+To build and install on your iPhone from a Mac with a free Apple account, see [local iOS testing](docs/ios-local-testing.md). The initial iOS identifier is `com.gabrielguerguen.goakit`. The `pnpm --filter @goakit/mobile run ios:device` command uses the Release configuration, with the interface code bundled into the application; Xcode, CocoaPods, signing, and the device must be ready.
 
 ## Adding components
 
 Before adding components, confirm a Gluestack CLI version compatible with the installed stack and use that version's `add` command. Review the generated diff; do not implicitly upgrade the stack to add a component.
 
-The setup uses Gluestack UI v5 (presented as alpha by the installer). NativeWind `5.0.0-rc.0` and `react-native-css@3.1.0-rc.0` are pinned as a compatible pair of prerelease versions. Resolved versions are recorded in `package-lock.json`; use `npm ci` to reproduce the installation. UniWind is not installed. The first block uses local navigation; Expo Router remains a proposal.
+The setup uses Gluestack UI v5 (presented as alpha by the installer). NativeWind `5.0.0-rc.0` and `react-native-css@3.1.0-rc.0` are pinned as a compatible pair of prerelease versions. Resolved versions are recorded in `pnpm-lock.yaml`; use `pnpm install --frozen-lockfile` to reproduce the installation. UniWind is not installed. The first block uses local navigation; Expo Router remains a proposal.
 
 ## Configuration
 
-Copy `.env.example` to `.env` if you need environment variables. `EXPO_PUBLIC_` variables are available in the application and must not contain secrets. Never send tokens, passwords, or private keys to GitHub.
+Copy `apps/mobile/.env.example` to `apps/mobile/.env` if you need environment variables. `EXPO_PUBLIC_` variables are available in the application and must not contain secrets. Never send tokens, passwords, or private keys to GitHub.
 
 ## Store distribution
 

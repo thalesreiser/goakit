@@ -4,7 +4,7 @@
 
 ## Existing foundation
 
-The repository contains Expo SDK 57, React Native, strict TypeScript, Gluestack UI v5, and NativeWind v5 preview. `package.json` declares dependencies; `package-lock.json` records resolved versions. The installer presents Gluestack as alpha. The foundation passed type checks, Expo compatibility checks, and bundle generation during setup; this does not amount to testing product flows on devices.
+The repository contains Expo SDK 57, React Native, strict TypeScript, Gluestack UI v5, and NativeWind v5 preview. The app lives in `apps/mobile` inside a pnpm workspace orchestrated by Turborepo; `apps/mobile/package.json` declares its dependencies and `pnpm-lock.yaml` records resolved versions. The installer presents Gluestack as alpha. The foundation passed type checks, Expo compatibility checks, and bundle generation during setup; this does not amount to testing product flows on devices.
 
 Keep NativeWind as the only main styling system in this foundation, without adding UniWind alongside it. This choice uses the existing setup and can be revisited. Before implementing screens, review with Gabriel whether to keep prerelease versions; a migration requires its own validation. Do not upgrade dependencies or run `@latest` installers as part of routine visual changes.
 
@@ -13,6 +13,8 @@ The first block uses local state navigation with typed routes in `ChecklistApp`,
 During implementation, NativeWind, already resolved as `5.0.0-rc.0`, was pinned alongside its required peer dependency `react-native-css@3.1.0-rc.0`. The legacy `nativewind/babel` preset was removed, keeping the Expo preset and Metro integration; duplicate transformation prevented the web preview from opening. Tokens use the light theme from Paper, without `:root.light`/`:root.dark` selectors that are incompatible with the current native compiler. The styling engine and Expo version were not changed. Reference: [NativeWind v5 installation](https://www.nativewind.dev/v5/getting-started/installation).
 
 ## Incremental structure
+
+Locations are relative to `apps/mobile/`.
 
 | Location | Responsibility | Status |
 | --- | --- | --- |

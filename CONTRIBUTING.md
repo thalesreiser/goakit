@@ -8,7 +8,7 @@ The repository is trunk-based: `main` is always releasable and every change reac
 
 1. Create a short-lived branch from an up-to-date `main`, named with one of these prefixes: `feat/`, `fix/`, `docs/`, `chore/`, `ci/`, `test/`, `refactor/`, `style/`, `build/` (for example `feat/quiz-nights`).
 2. Keep one topic per pull request. Unrelated fixes go in their own branch.
-3. Put dependency changes (`package.json`, `package-lock.json`, Expo SDK upgrades) in their own pull request, installed with `npx expo install` or `npm install` so the lockfile stays consistent.
+3. Put dependency changes (`package.json` files, `pnpm-lock.yaml`, Expo SDK upgrades) in their own pull request, installed with `pnpm --filter @goakit/mobile exec expo install` or `pnpm --filter <package> add` so the lockfile stays consistent.
 4. Title the pull request in [Conventional Commits](https://www.conventionalcommits.org/) form, such as `feat: add quiz nights step`. Pull requests are squash-merged and the title becomes the commit message on `main`.
 5. Fill in the pull request template, including what was actually verified.
 6. Never merge your own pull request. Another person must approve it first.
@@ -24,10 +24,9 @@ Respect the invariants in [AGENTS.md](AGENTS.md): binary personal progress, inde
 Run the checks listed in the [README](README.md#verification):
 
 ```sh
-npm run typecheck
-npm test
-npx expo install --check
-npx expo export --platform all
+pnpm turbo run typecheck test
+pnpm turbo run expo:check
+pnpm turbo run export
 ```
 
 The [CI workflow](.github/workflows/ci.yml) runs the same checks on every pull request and is the source of truth; a pull request is ready for review only when CI is green.

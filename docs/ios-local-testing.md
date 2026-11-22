@@ -11,20 +11,22 @@ The current approach uses Xcode on a Mac and a free Apple account (Personal Team
 
 ## Generate and install
 
-From the project root:
+From the repository root:
 
 ```sh
-npm ci
-npx expo prebuild --platform ios --no-install
+corepack enable
+pnpm install --frozen-lockfile
+cd apps/mobile
+pnpm exec expo prebuild --platform ios --no-install
 cd ios
 pod install
 ```
 
-Open `ios/goakit.xcworkspace` in Xcode (after installing pods). In the goakit target's Signing & Capabilities settings, select your Personal Team and automatic signing. The initial identifier is `com.gabrielguerguen.goakit`; if Apple reports a conflict, use a unique identifier and update `app.json` to preserve the choice.
+Open `apps/mobile/ios/goakit.xcworkspace` in Xcode (after installing pods). In the goakit target's Signing & Capabilities settings, select your Personal Team and automatic signing. The initial identifier is `com.gabrielguerguen.goakit`; if Apple reports a conflict, use a unique identifier and update `apps/mobile/app.json` to preserve the choice.
 
-The iPhone should appear as a run destination. To test without a development server, select Release in Product → Scheme → Edit Scheme → Run → Build Configuration and run the app. There is also `npm run ios:device`, which uses Release; signing and the connection must already be ready.
+The iPhone should appear as a run destination. To test without a development server, select Release in Product → Scheme → Edit Scheme → Run → Build Configuration and run the app. There is also `pnpm --filter @goakit/mobile run ios:device`, which uses Release; signing and the connection must already be ready.
 
-Do not record device IDs, certificates, credentials, or personal signing configuration in Git. The generated `ios/` folder remains ignored; `app.json` is the source of shared configuration. Prebuild must not erase necessary manual changes without reviewing them first.
+Do not record device IDs, certificates, credentials, or personal signing configuration in Git. The generated `apps/mobile/ios/` folder remains ignored; `apps/mobile/app.json` is the source of shared configuration. Prebuild must not erase necessary manual changes without reviewing them first.
 
 ## Limits
 
