@@ -1,8 +1,10 @@
 import base from '@goakit/config/eslint/base';
+import boundaries from '@goakit/config/eslint/boundaries';
 import { defineConfig } from 'eslint/config';
 
 export default defineConfig([
   base,
+  boundaries.app,
   {
     languageOptions: {
       parserOptions: {
