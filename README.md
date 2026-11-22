@@ -75,6 +75,10 @@ Copy `.env.example` to `.env` if you need environment variables. `EXPO_PUBLIC_` 
 
 The project is not yet linked to an Expo/EAS account. Before distribution, define Android and iOS identifiers, replace the default icons, and configure EAS and store credentials.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the branch, pull request, and verification workflow. Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
 ## References
 
 - [Expo and TypeScript](https://docs.expo.dev/guides/typescript/)
