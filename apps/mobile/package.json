@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "format": "prettier --write . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
     "format:check": "prettier --check . --ignore-path ../../.gitignore --ignore-path ../../.prettierignore",
-    "test": "node --experimental-strip-types --experimental-test-coverage --test-coverage-include=\"src/features/**/*.ts\" --test-coverage-lines=70 --test-coverage-branches=70 --test-coverage-functions=70 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/lcov.info --test tests/*.test.mjs",
+    "test": "node --experimental-strip-types --experimental-test-coverage --test-coverage-include=\"src/features/**/*.ts\" --test-coverage-lines=70 --test-coverage-branches=70 --test-coverage-functions=70 --test tests/*.test.mjs",
     "expo:check": "expo install --check",
     "export": "expo export --platform all"
   },
