@@ -12,6 +12,9 @@ export default defineConfig({
     // Every `vitest run` measures coverage and fails below the API minimum
     // (80%). The entry points only start the process or write the OpenAPI
     // file; what they call is covered through createApp().
-    coverage: coverage('api', { exclude: ['src/main.ts', 'src/openapi/generate.ts'] }),
+    coverage: {
+      ...coverage('api', { exclude: ['src/main.ts', 'src/openapi/generate.ts'] }),
+      thresholds: { lines: 100, statements: 100, functions: 100, branches: 100 },
+    },
   },
 });
