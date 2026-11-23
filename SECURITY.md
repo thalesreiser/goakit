@@ -22,3 +22,5 @@ Goakit is currently a prototype with mock data and in-memory state: there is no 
 The [security workflow](.github/workflows/security.yml) runs on every pull request to `main` and every push to `main`: Gitleaks scans the full git history for secrets, and dependency review fails a pull request that adds a dependency with a known vulnerability of high or critical severity.
 
 [CodeQL](.github/workflows/codeql.yml) analyzes the JavaScript and TypeScript code on every pull request, every push to `main`, and weekly; [Dependabot](.github/dependabot.yml) opens weekly, grouped update pull requests for npm packages and GitHub Actions.
+
+Every GitHub Action is pinned to a full commit SHA with a version comment (`owner/repo@<sha> # v1.2.3`), and each workflow grants the `GITHUB_TOKEN` only the permissions it needs. The [actions pinning workflow](.github/workflows/actions-pinning.yml) fails a pull request that references an action by tag or branch; Dependabot keeps the SHAs and comments up to date.
