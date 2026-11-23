@@ -12,6 +12,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "openapi": {
+      "dependsOn": ["build"],
+      "outputs": ["dist/openapi.json"]
+    },
     "typecheck": {
       "dependsOn": ["^build"],
       "outputs": []

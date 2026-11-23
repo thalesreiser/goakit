@@ -6,7 +6,7 @@ A music festival checklist app for Android and iOS, initially focused on psytran
 
 The first UI block was implemented from Paper: My lists, empty states, checklist, adding/editing/removing items, and progress. See [testing instructions and delivery limits](docs/implementation.md).
 
-The interface uses mock data and in-memory state. The quiz, list reuse, privacy, and sharing are upcoming blocks and are not yet available. The app has no backend connection, persistence, or live integration yet. The API in `apps/api` is a skeleton with configuration validation and a health check only.
+The interface uses mock data and in-memory state. The quiz, list reuse, privacy, and sharing are upcoming blocks and are not yet available. The app has no backend connection, persistence, or live integration yet. The API in `apps/api` is a skeleton with configuration validation, a health check, a common error format, and an OpenAPI document; its only `/v1` route is a temporary diagnostic echo.
 
 ## Project foundations
 
@@ -55,6 +55,8 @@ The repository is a pnpm workspace orchestrated by Turborepo (`pnpm-workspace.ya
   - `src/main.ts`: process entry point; `src/app.ts`: builds the Nest application on Fastify.
   - `src/config/`: environment validation (Zod) and the injectable configuration.
   - `src/health/`: the `GET /health` route.
+  - `src/problem/`: the Problem Details error format and the global exception filter; `src/validation/`: the Zod validation pipe.
+  - `src/openapi/`: OpenAPI document generation; `src/echo/`: the temporary diagnostic route.
   - `test/`: Vitest unit and end-to-end tests.
 - `packages/config/`: shared tooling configuration (`@goakit/config`): TypeScript (`tsconfig/strict.json`, `tsconfig/base.json`), ESLint flat configs (`eslint/base` for TypeScript packages, `eslint/expo` for Expo apps, built on `eslint-config-expo`), and Prettier (`prettier`).
 - `docs/`: foundations, implementation, and planning.
@@ -81,6 +83,7 @@ To build and install on your iPhone from a Mac with a free Apple account, see [l
 `apps/api` (`@goakit/api`) is the backend skeleton: NestJS 11 with the Fastify adapter ([ADR 0002](docs/decisions/0002-backend-typescript-nestjs.md)). It has no business routes, database, or authentication yet.
 
 - Business routes will live under the `/v1` prefix. `GET /health` stays outside it, unversioned, and returns `200` with `{ "status": "ok", "uptime": <seconds> }`.
+- `POST /v1/echo` is a temporary diagnostic route, not a business route: it returns `{ "message": ... }` built from a body `{ "message": string (1-280), "repeat"?: 1-3 }` and an optional `?uppercase=true|false`. It exists to exercise validation, errors, and OpenAPI end to end, and will be removed when the first real `/v1` route lands.
 - The environment is validated with Zod at startup. If a required variable is missing or a value is invalid, the process exits with code 1 and lists every problem.
 
 | Variable    | Required | Default   | Values                                                       |
@@ -90,7 +93,40 @@ To build and install on your iPhone from a Mac with a free Apple account, see [l
 | `HOST`      | no       | `0.0.0.0` | interface to bind                                            |
 | `LOG_LEVEL` | no       | `info`    | `fatal`, `error`, `warn`, `info`, `debug`, `trace`, `silent` |
 
-Copy `apps/api/.env.example` to `apps/api/.env` for local runs; `start` loads it when present. Scripts (`pnpm --filter @goakit/api run <script>`): `build` (compiles to `dist/`), `start` (runs `dist/main.js`), `typecheck`, `lint`, `test` (Vitest), `format`, `format:check`.
+Copy `apps/api/.env.example` to `apps/api/.env` for local runs; `start` loads it when present. Scripts (`pnpm --filter @goakit/api run <script>`): `build` (compiles to `dist/`), `start` (runs `dist/main.js`), `openapi` (writes `dist/openapi.json`; run after `build`), `typecheck`, `lint`, `test` (Vitest), `format`, `format:check`.
+
+### Errors
+
+Every error response, including validation failures, unknown routes (`404`), malformed JSON, and unexpected failures, uses [RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457) with the `application/problem+json` content type:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Bad Request",
+  "status": 400,
+  "detail": "The request has 1 invalid field.",
+  "instance": "/v1/echo",
+  "errors": [
+    {
+      "location": "body",
+      "field": "message",
+      "message": "Too small: expected string to have >=1 characters",
+      "code": "too_small"
+    }
+  ]
+}
+```
+
+- `type` is `about:blank` for every current error, so `title` is the HTTP status phrase; clients branch on `status`. Problem types with their own URI, if ever needed, are added to the catalogue in `apps/api/src/problem/problem-details.ts`.
+- `instance` is the request path without the query string.
+- `errors` appears on validation errors (`400`) and lists every invalid value: `location` (`body`, `query`, or `path`), `field` (dot-separated path, absent when the whole part is invalid), `message`, and the Zod issue `code`.
+- `5xx` responses always carry a generic `detail`; the real error is logged on the server and never sent to the client.
+
+Input is validated with Zod: declare a DTO with `class MyDto extends createZodDto(schema) {}` (from `nestjs-zod`) and type a `@Body()`, `@Query()`, or `@Param()` argument with it. The global `ZodValidationPipe` (`apps/api/src/validation/`) parses the value, applies schema defaults, and rejects invalid input. To validate a single value, pass a schema to the pipe: `@Param('id', new ZodValidationPipe(z.uuid()))`.
+
+### OpenAPI
+
+The OpenAPI 3.1 document is generated from the controllers and their Zod DTOs, so the schemas are the single source of truth. `pnpm turbo run openapi --filter @goakit/api` builds the API and writes `apps/api/dist/openapi.json` without starting a server. The file is not committed: CI's `Build` job generates it and uploads it as the `openapi` workflow artifact whenever the API is affected (always on `main`). It documents every route, including `/health`, and each operation's Problem Details responses. `packages/contracts` (planned) will generate the TypeScript client from it.
 
 ## Adding components
 
