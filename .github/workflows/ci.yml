@@ -70,7 +70,18 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           turbo-cache: test
-      - run: pnpm turbo run test $AFFECTED_FLAG
+      # Tests run with coverage; a package below its minimum (domain 90%, API
+      # 80%, app 70%) fails here, and Turborepo prefixes the error with the
+      # package name. --continue reports every failing package, not the first.
+      - run: pnpm turbo run test $AFFECTED_FLAG --continue
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage
+          path: |
+            apps/*/coverage/
+            packages/*/coverage/
+          if-no-files-found: ignore
 
   build:
     name: Build

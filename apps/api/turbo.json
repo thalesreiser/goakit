@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "test": {
+      // Vitest writes the coverage report here (lcov, JSON summary).
+      "outputs": ["coverage/**"]
+    }
+  }
+}
