@@ -43,7 +43,23 @@ The [CI workflow](.github/workflows/ci.yml) runs the same checks on every pull r
 
 ### Continuous integration
 
-CI runs one job per check: `Format`, `Lint`, `Typecheck`, `Test`, `Build` (`build` and `export`) and `Expo dependency check`. On a pull request, each Turborepo task runs only in the packages affected by the change and their dependents (`turbo run <task> --affected`, compared with the pull request's base commit); a change to `turbo.json`, `.nvmrc`, the root `package.json`, `pnpm-workspace.yaml` or the CI files affects every package. Pushes to `main` run every task in every package. Task results are cached between runs in the local Turborepo cache (`.turbo/cache`), restored per job. The `ci-ok` job summarises the result and fails if any other job failed or was cancelled; it is the check to require on `main`.
+CI runs one job per check: `Format`, `Lint`, `Typecheck`, `Test` (with the coverage gate below), `Build` (`build` and `export`) and `Expo dependency check`. On a pull request, each Turborepo task runs only in the packages affected by the change and their dependents (`turbo run <task> --affected`, compared with the pull request's base commit); a change to `turbo.json`, `.nvmrc`, the root `package.json`, `pnpm-workspace.yaml` or the CI files affects every package. Pushes to `main` run every task in every package. Task results are cached between runs in the local Turborepo cache (`.turbo/cache`), restored per job. The `ci-ok` job summarises the result and fails if any other job failed or was cancelled; it is the check to require on `main`.
+
+#### Test coverage
+
+`test` runs with coverage in every package that has a bar, so the `Test` job fails when a change drops a package below its layer's minimum; the error line starts with the package name (`@goakit/api:test: ...`). The minimums are in `@goakit/config/vitest/coverage` (`COVERAGE_THRESHOLDS`) and apply to lines, statements, functions and branches:
+
+| Layer    | Minimum | Workspaces                  | Measured                                                                           |
+| -------- | ------- | --------------------------- | ---------------------------------------------------------------------------------- |
+| `domain` | 90%     | `packages/domain` (planned) | `src/**/*.ts`                                                                      |
+| `api`    | 80%     | `apps/api`                  | `src/**/*.ts`, except the entry points `src/main.ts` and `src/openapi/generate.ts` |
+| `app`    | 70%     | `apps/mobile`               | `src/features/**/*.ts` (lines, branches, functions)                                |
+
+- Vitest workspaces build their options from the preset. When you create `packages/domain`, add `@vitest/coverage-v8` (same version as `vitest`) and use `coverage: coverage('domain')` in `test` of its `vitest.config.mts`, as `apps/api/vitest.config.mts` does with `'api'`.
+- `apps/mobile` uses the Node.js test runner (`--experimental-test-coverage` and `--test-coverage-*` flags in its `test` script), so its 70% is repeated there; keep it equal to `COVERAGE_THRESHOLDS.app`. React components cannot run under `node:test`, so only the pure logic in `src/features/**/*.ts` (today `features/checklists/model.ts`) is measured. The Node.js runner reports only files the tests load: a new `.ts` module under `src/features/` counts once a test imports it.
+- `packages/config` has no bar: its tests lint fixtures against the shared presets, and the rest of the package is declarative configuration.
+- Each package writes its report to `coverage/` (ignored by Git, Prettier and ESLint; a Turborepo output). CI uploads them as the `coverage` artifact of the `Test` job.
+- Do not lower a bar to make a pull request pass; add tests, or raise it with Thales as a decision.
 
 Pin every action you add to `.github` by its full commit SHA with a version comment (`owner/repo@<sha> # v1.2.3`); the `Actions pinned` check fails on tag or branch references. Local actions (`./.github/actions/...`) are exempt.
 

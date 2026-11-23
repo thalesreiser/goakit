@@ -74,6 +74,8 @@ pnpm turbo run export
 
 `lint` runs ESLint in every workspace through Turborepo. Format with Prettier using `pnpm format` (writes) or `pnpm format:check` (reports only); both run at the repository root, over the whole repository, and honor `.prettierignore`. CI runs `pnpm format:check` right after install.
 
+`test` also measures coverage and fails when a package is below its minimum: 80% for `apps/api` (Vitest, V8 provider), 70% for `apps/mobile` (Node.js test runner, pure logic in `src/features/**/*.ts` only). Reports go to each package's `coverage/` folder; see [CONTRIBUTING.md](CONTRIBUTING.md#test-coverage).
+
 `expo:check` runs `expo install --check` and `export` runs `expo export --platform all`, both in `apps/mobile`. Export checks JavaScript bundles; it does not produce store binaries or replace device testing.
 
 To build and install on your iPhone from a Mac with a free Apple account, see [local iOS testing](docs/ios-local-testing.md). The initial iOS identifier is `com.gabrielguerguen.goakit`. The `pnpm --filter @goakit/mobile run ios:device` command uses the Release configuration, with the interface code bundled into the application; Xcode, CocoaPods, signing, and the device must be ready.
