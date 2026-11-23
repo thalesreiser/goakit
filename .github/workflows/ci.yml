@@ -86,7 +86,14 @@ jobs:
           turbo-cache: build
       # `build` compiles server-side packages (dist/); `export` bundles the
       # Expo app for every platform (`expo export`). It is not a device test.
-      - run: pnpm turbo run build export $AFFECTED_FLAG
+      # `openapi` writes the API's OpenAPI document to apps/api/dist/.
+      - run: pnpm turbo run build export openapi $AFFECTED_FLAG
+      # Only present when the API was affected (always on main).
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: openapi
+          path: apps/api/dist/openapi.json
+          if-no-files-found: ignore
 
   expo-check:
     name: Expo dependency check
