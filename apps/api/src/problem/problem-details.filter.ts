@@ -13,6 +13,7 @@ export const INTERNAL_ERROR_DETAIL = 'The server could not complete the request.
  * `HttpException`s, request validation errors, unknown routes (Nest's 404),
  * Fastify errors such as malformed JSON or an unsupported media type, and
  * unexpected errors, which become a generic 500 and are logged server-side.
+ * Every response carries the request id as `requestId`.
  */
 @Catch()
 export class ProblemDetailsFilter implements ExceptionFilter {
@@ -23,13 +24,14 @@ export class ProblemDetailsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.adapterHost;
     const http = host.switchToHttp();
-    const url = String(httpAdapter.getRequestUrl(http.getRequest()));
-    const problem = toProblem(exception, url.split('?')[0] ?? url);
+    // Fastify's request; `id` is the request id (see `resolveRequestId`).
+    const request = http.getRequest<{ id: string }>();
+    const url = String(httpAdapter.getRequestUrl(request));
+    const problem = toProblem(exception, url.split('?')[0] ?? url, request.id);
 
     if (problem.status >= 500) {
-      this.logger.error(
-        exception instanceof Error ? (exception.stack ?? exception.message) : String(exception),
-      );
+      // Logged as `err` (type, message, stack) on the request's log line.
+      this.logger.error(exception instanceof Error ? exception : String(exception));
     }
 
     const response: unknown = http.getResponse();
@@ -39,16 +41,17 @@ export class ProblemDetailsFilter implements ExceptionFilter {
 }
 
 /** Maps any thrown value to the Problem Details body sent to the client. */
-export function toProblem(exception: unknown, instance: string): ProblemDetails {
+export function toProblem(exception: unknown, instance: string, requestId: string): ProblemDetails {
+  const request = { instance, requestId };
   if (exception instanceof RequestValidationException) {
-    return httpProblem(HttpStatus.BAD_REQUEST, exception.message, instance, exception.errors);
+    return httpProblem(HttpStatus.BAD_REQUEST, exception.message, request, exception.errors);
   }
   if (exception instanceof HttpException) {
     const status = exception.getStatus();
-    if (status < 500) return httpProblem(status, clientMessage(exception), instance);
-    return httpProblem(status, INTERNAL_ERROR_DETAIL, instance);
+    if (status < 500) return httpProblem(status, clientMessage(exception), request);
+    return httpProblem(status, INTERNAL_ERROR_DETAIL, request);
   }
-  return httpProblem(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_ERROR_DETAIL, instance);
+  return httpProblem(HttpStatus.INTERNAL_SERVER_ERROR, INTERNAL_ERROR_DETAIL, request);
 }
 
 /** The message a 4xx `HttpException` was created with. */

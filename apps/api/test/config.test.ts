@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest';
-import { nestLogLevels } from '../src/app';
 import { ConfigValidationError, loadConfig } from '../src/config/config';
 
 const validEnv = { NODE_ENV: 'production', PORT: '8080', HOST: '127.0.0.1', LOG_LEVEL: 'warn' };
@@ -60,17 +59,5 @@ describe('loadConfig', () => {
         'LOG_LEVEL: must be one of: fatal, error, warn, info, debug, trace, silent',
       ],
     );
-  });
-});
-
-describe('nestLogLevels', () => {
-  it('enables the chosen level and everything more severe', () => {
-    expect(nestLogLevels('fatal')).toEqual(['fatal']);
-    expect(nestLogLevels('info')).toEqual(['fatal', 'error', 'warn', 'log']);
-    expect(nestLogLevels('trace')).toEqual(['fatal', 'error', 'warn', 'log', 'debug', 'verbose']);
-  });
-
-  it('turns logging off for silent', () => {
-    expect(nestLogLevels('silent')).toBe(false);
   });
 });
