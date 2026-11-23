@@ -55,7 +55,7 @@ describe('POST /v1/echo (validation)', () => {
   it('answers an invalid request with a 400 Problem Details listing every invalid field', async () => {
     const response = await server().inject({
       method: 'POST',
-      url: '/v1/echo?uppercase=yes&token=secret',
+      url: '/v1/echo?uppercase=true&token=secret',
       payload: { message: '', repeat: 9 },
     });
     expect(response.statusCode).toBe(400);

@@ -18,7 +18,7 @@ export class EchoController {
     description:
       'Returns the message it receives. It only exercises validation and error responses, and will be removed when business routes land.',
   })
-  @ApiOkResponse({ type: EchoResponseDto.Output })
+  @ApiOkResponse({ description: 'The echoed message.', type: EchoResponseDto.Output })
   echo(@Body() body: EchoBodyDto, @Query() query: EchoQueryDto): EchoResponse {
     const text = query.uppercase === 'true' ? body.message.toUpperCase() : body.message;
     return { message: Array.from({ length: body.repeat }, () => text).join(' ') };

@@ -35,7 +35,7 @@ export const problemDetailsSchema = z
   .object({
     type: z.string().describe('URI of the problem type; `about:blank` for plain HTTP errors.'),
     title: z.string().describe('Short summary of the problem type.'),
-    status: z.number().int().describe('HTTP status code.'),
+    status: z.number().int().min(100).max(599).describe('HTTP status code.'),
     detail: z.string().describe('Explanation specific to this occurrence.'),
     instance: z
       .string()

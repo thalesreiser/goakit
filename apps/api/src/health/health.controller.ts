@@ -18,7 +18,7 @@ class HealthStatusDto extends createZodDto(healthStatusSchema) {}
 export class HealthController {
   @Get()
   @ApiOperation({ summary: 'Liveness probe (unversioned, outside /v1)' })
-  @ApiOkResponse({ type: HealthStatusDto.Output })
+  @ApiOkResponse({ description: 'The process is up.', type: HealthStatusDto.Output })
   check(): HealthStatus {
     return { status: 'ok', uptime: Math.floor(process.uptime()) };
   }

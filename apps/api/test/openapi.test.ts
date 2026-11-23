@@ -30,7 +30,13 @@ describe('OpenAPI document', () => {
   it('describes the demo route under /v1 with its Zod body and query schemas', () => {
     const operation = document.paths['/v1/echo']?.post;
     expect(operation).toBeDefined();
-    expect(JSON.stringify(operation?.requestBody)).toContain('message');
+    expect(operation?.requestBody).toMatchObject({
+      content: { 'application/json': { schema: { $ref: '#/components/schemas/EchoBodyDto' } } },
+    });
+    expect(document.components?.schemas?.['EchoBodyDto']).toMatchObject({
+      properties: { message: { type: 'string', minLength: 1, maxLength: 280 } },
+      required: ['message'],
+    });
     expect(operation?.parameters).toEqual(
       expect.arrayContaining([expect.objectContaining({ name: 'uppercase', in: 'query' })]),
     );
