@@ -40,6 +40,11 @@ export const problemDetailsSchema = z
     instance: z
       .string()
       .describe('Path of the request that caused the problem, without the query.'),
+    requestId: z
+      .string()
+      .describe(
+        'Id of the request, also sent in the `X-Request-Id` response header and in every server log line about it. Quote it when reporting a problem.',
+      ),
     errors: z
       .array(fieldErrorSchema)
       .optional()
@@ -50,11 +55,17 @@ export const problemDetailsSchema = z
 export type FieldError = z.infer<typeof fieldErrorSchema>;
 export type ProblemDetails = z.infer<typeof problemDetailsSchema>;
 
+/** The request a problem is about: its path (without the query) and its id. */
+export interface ProblemRequest {
+  instance: string;
+  requestId: string;
+}
+
 /** Builds the Problem Details body of a plain HTTP error. */
 export function httpProblem(
   status: number,
   detail: string,
-  instance: string,
+  { instance, requestId }: ProblemRequest,
   errors?: readonly FieldError[],
 ): ProblemDetails {
   return {
@@ -63,6 +74,7 @@ export function httpProblem(
     status,
     detail,
     instance,
+    requestId,
     ...(errors ? { errors: [...errors] } : {}),
   };
 }

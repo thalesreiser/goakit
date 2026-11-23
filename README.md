@@ -106,6 +106,7 @@ Every error response, including validation failures, unknown routes (`404`), mal
   "status": 400,
   "detail": "The request has 1 invalid field.",
   "instance": "/v1/echo",
+  "requestId": "0b4f8c2e-6a51-4d0e-9c7a-3f2d1e8b5a90",
   "errors": [
     {
       "location": "body",
@@ -119,10 +120,38 @@ Every error response, including validation failures, unknown routes (`404`), mal
 
 - `type` is `about:blank` for every current error, so `title` is the HTTP status phrase; clients branch on `status`. Problem types with their own URI, if ever needed, are added to the catalogue in `apps/api/src/problem/problem-details.ts`.
 - `instance` is the request path without the query string.
+- `requestId` is the request id, also sent in the `X-Request-Id` response header (see [Logs](#logs)).
 - `errors` appears on validation errors (`400`) and lists every invalid value: `location` (`body`, `query`, or `path`), `field` (dot-separated path, absent when the whole part is invalid), `message`, and the Zod issue `code`.
 - `5xx` responses always carry a generic `detail`; the real error is logged on the server and never sent to the client.
 
 Input is validated with Zod: declare a DTO with `class MyDto extends createZodDto(schema) {}` (from `nestjs-zod`) and type a `@Body()`, `@Query()`, or `@Param()` argument with it. The global `ZodValidationPipe` (`apps/api/src/validation/`) parses the value, applies schema defaults, and rejects invalid input. To validate a single value, pass a schema to the pipe: `@Param('id', new ZodValidationPipe(z.uuid()))`.
+
+### Logs
+
+The API writes one JSON object per line to stdout through Fastify's built-in [pino](https://getpino.io) logger; Nest's own messages (`new Logger('Context')`, startup lines) go through the same logger, with a `context` field. `LOG_LEVEL` sets the threshold, and `silent` turns logging off. Each request produces one line when its response is sent:
+
+```json
+{
+  "level": 30,
+  "time": 1795000000000,
+  "pid": 4242,
+  "hostname": "api-1",
+  "reqId": "0b4f8c2e-6a51-4d0e-9c7a-3f2d1e8b5a90",
+  "method": "POST",
+  "route": "/v1/echo",
+  "statusCode": 200,
+  "responseTime": 3.4,
+  "msg": "request completed"
+}
+```
+
+- `route` is the route pattern (such as `/v1/lists/:id`), never the URL, so path values and the query string stay out of the logs; it is `null` when no route matched (`404`). `responseTime` is in milliseconds.
+- The line is `info`, `error` for `5xx` responses, and `debug` for `GET /health`, so probes are hidden at the default level.
+- Every line logged while handling a request, including `Logger` lines from Nest code, carries the request's `reqId`. A `5xx` also logs the error itself (`err` with type, message, and stack) on an `error` line.
+
+**Request id.** An incoming `X-Request-Id` is kept when it is a single value of 1 to 128 letters, digits, `.`, `_`, or `-`; otherwise the API generates a random UUID. The id is returned in the `X-Request-Id` response header, in the `requestId` of every Problem Details error, and as `reqId` in the logs.
+
+**What is never logged.** Request and response bodies, the query string, path values, headers (including `Authorization` and `Cookie`), and the client address. Request lines are built from an explicit list of fields, the request and reply serializers keep only the method, route, and status code, and `headers`, `body`, `query`, `params`, `authorization`, and `cookie` are removed from any log object, at the top level or one level down. Code that logs must follow the same rule: no personal data, trip dates, or list content in log messages; log ids and counts instead.
 
 ### OpenAPI
 

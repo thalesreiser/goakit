@@ -50,12 +50,12 @@ describe('OpenAPI document', () => {
     expect(document.paths['/v1/health']).toBeUndefined();
   });
 
-  it('defines the Problem Details schema with the errors extension', () => {
+  it('defines the Problem Details schema with the requestId and errors extensions', () => {
     const schema = document.components?.schemas?.['ProblemDetails'];
     expect(schema).toMatchObject({
       type: 'object',
-      required: ['type', 'title', 'status', 'detail', 'instance'],
-      properties: { errors: { type: 'array' } },
+      required: ['type', 'title', 'status', 'detail', 'instance', 'requestId'],
+      properties: { requestId: { type: 'string' }, errors: { type: 'array' } },
     });
   });
 });

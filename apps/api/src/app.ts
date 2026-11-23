@@ -1,30 +1,22 @@
 import 'reflect-metadata';
-import type { LogLevel as NestLogLevel } from '@nestjs/common';
 import { RequestMethod } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
-import type { AppConfig, LogLevel } from './config/config';
+import type { AppConfig } from './config/config';
 import { loadConfig } from './config/config';
+import { JsonLogger } from './logging/json-logger';
+import type { LogDestination } from './logging/logging';
+import { installRequestLogging, loggerOptions } from './logging/logging';
+import { REQUEST_ID_HEADER, resolveRequestId } from './logging/request-id';
 
 /** Prefix for every business route. Health stays outside it. */
 export const API_PREFIX = 'v1';
 
-const LEVEL_ORDER = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'] as const;
-const NEST_LEVEL: Record<(typeof LEVEL_ORDER)[number], NestLogLevel> = {
-  fatal: 'fatal',
-  error: 'error',
-  warn: 'warn',
-  info: 'log',
-  debug: 'debug',
-  trace: 'verbose',
-};
-
-/** Maps `LOG_LEVEL` to the Nest logger levels it enables (`false` = silent). */
-export function nestLogLevels(level: LogLevel): NestLogLevel[] | false {
-  if (level === 'silent') return false;
-  return LEVEL_ORDER.slice(0, LEVEL_ORDER.indexOf(level) + 1).map((name) => NEST_LEVEL[name]);
+export interface CreateAppOptions {
+  /** Where JSON log lines go; stdout by default. Tests pass a capture. */
+  logDestination?: LogDestination;
 }
 
 /**
@@ -34,13 +26,25 @@ export function nestLogLevels(level: LogLevel): NestLogLevel[] | false {
  */
 export async function createApp(
   env: Readonly<Record<string, string | undefined>>,
+  options: CreateAppOptions = {},
 ): Promise<{ app: NestFastifyApplication; config: AppConfig }> {
   const config = loadConfig(env);
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule.forRoot(config),
-    new FastifyAdapter(),
-    { logger: nestLogLevels(config.logLevel), abortOnError: false },
-  );
+  const adapter = new FastifyAdapter({
+    logger: loggerOptions(config.logLevel, options.logDestination),
+    // The id is validated here instead of trusting the header as is.
+    requestIdHeader: false,
+    genReqId: (request: { headers: Readonly<Record<string, unknown>> }) =>
+      resolveRequestId(request.headers[REQUEST_ID_HEADER]),
+    // Replaced by the request line of `installRequestLogging`, which logs the
+    // route pattern instead of the URL and its query string.
+    disableRequestLogging: true,
+  });
+  installRequestLogging(adapter);
+
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule.forRoot(config), adapter, {
+    logger: new JsonLogger(adapter.getInstance().log),
+    abortOnError: false,
+  });
   app.setGlobalPrefix(API_PREFIX, {
     exclude: [{ path: 'health', method: RequestMethod.GET }],
   });
