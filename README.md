@@ -6,7 +6,7 @@ A music festival checklist app for Android and iOS, initially focused on psytran
 
 The first UI block was implemented from Paper: My lists, empty states, checklist, adding/editing/removing items, and progress. See [testing instructions and delivery limits](docs/implementation.md).
 
-The interface uses mock data and in-memory state. The quiz, list reuse, privacy, and sharing are upcoming blocks and are not yet available. The app has no backend connection, persistence, or live integration yet. The API in `apps/api` is a skeleton with configuration validation and a health check only; Bruno will handle infrastructure later.
+The interface uses mock data and in-memory state. The quiz, list reuse, privacy, and sharing are upcoming blocks and are not yet available. The app has no backend connection, persistence, or live integration yet. The API in `apps/api` is a skeleton with configuration validation and a health check only.
 
 ## Project foundations
 
